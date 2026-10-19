@@ -57,7 +57,7 @@ def did_factory(ctx):
             tenant_id=tenant_id,
             e164=e164,
             alias="primary",
-            provider_id="test-provider",
+            provider_id="carrier-1",
             provider_reference="assigned-123",
             target_uri=target_uri,
             status=status,
