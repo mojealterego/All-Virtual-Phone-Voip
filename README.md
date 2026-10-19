@@ -26,11 +26,11 @@ Multi-channel telecommunications platform: licensed/verified DID numbers, author
 
 The routing control plane is implemented in Python/FastAPI and SQLAlchemy. Production configuration requires an explicit database URL, role-specific API credentials and HTTPS/mTLS termination upstream. The service returns **routing decisions**, not simulated completed calls.
 
-See [ROADMAP.md](ROADMAP.md) for verified test status.
+CI verification: [25 tests passed on Python 3.11 and 3.13](https://github.com/mojealterego/All-Virtual-Phone-Voip/actions/runs/39212431543). See [ROADMAP.md](ROADMAP.md) for the exact validated commit and remaining gates.
 
 ### Local development
 
-Install Python 3.13+ and run:
+Install Python 3.11+ and run:
 
 ```bash
 python -m pip install -e ".[dev]"
