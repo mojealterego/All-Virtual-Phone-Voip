@@ -74,7 +74,7 @@ def resolve_inbound(
     if principal.role != "carrier":
         raise RoutingDenied("Carrier ingress credentials required")
     require_e164(did_e164)
-    did = session.scalar(select(VirtualDid).where(VirtualDid.e164 == did_e164))
+    did = session.scalar(select(VirtualDid).where(VirtualDid.e164 == did_e164, VirtualDid.provider_id == principal.identity))
     if (
         did is None
         or did.status != "active"
