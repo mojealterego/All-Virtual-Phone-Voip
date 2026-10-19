@@ -116,3 +116,17 @@ def test_invalid_e164_and_extra_field_fail_validation(ctx, did_factory):
     assert client.post("/v1/route/outbound", json=invalid, headers=token(TENANT_A)).status_code == 422
     injected = {**CALL, "tenant_id": "tenant-b"}
     assert client.post("/v1/route/outbound", json=injected, headers=token(TENANT_A)).status_code == 422
+
+
+def test_carrier_cannot_resolve_foreign_provider_did(ctx, did_factory):
+    client, factory = ctx
+    did = did_factory()
+    with factory() as session:
+        item = session.get(VirtualDid, did.id)
+        item.provider_id = "different-carrier"
+        session.commit()
+    assert client.post(
+        "/v1/route/inbound",
+        json={"did_e164": "+48500123456"},
+        headers=token(CARRIER),
+    ).status_code == 404
