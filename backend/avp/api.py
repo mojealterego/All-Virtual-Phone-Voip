@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import os
 from collections.abc import Iterator
-from typing import Annotated
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
@@ -52,7 +51,7 @@ def create_app(
             yield session
 
     def principal(
-        authorization: Annotated[str | None, Header()] = None,
+        authorization: str | None = Header(default=None),
     ) -> Principal:
         scheme, separator, token = (authorization or "").partition(" ")
         if not separator or scheme.lower() != "bearer" or not token:
@@ -75,7 +74,7 @@ def create_app(
         return {"status": "alive"}
 
     @app.get("/readyz")
-    def ready(session: Annotated[Session, Depends(get_session)]) -> dict[str, str]:
+    def ready(session: Session = Depends(get_session)) -> dict[str, str]:
         try:
             session.execute(text("SELECT 1"))
             return {"status": "ready"}
@@ -85,8 +84,8 @@ def create_app(
     @app.post("/v1/route/outbound")
     def outbound(
         request: OutboundRequest,
-        current: Annotated[Principal, Depends(principal)],
-        session: Annotated[Session, Depends(get_session)],
+        current: Principal = Depends(principal),
+        session: Session = Depends(get_session),
     ) -> dict[str, str]:
         try:
             return authorize_outbound(
@@ -98,8 +97,8 @@ def create_app(
     @app.post("/v1/route/inbound")
     def inbound(
         request: InboundRequest,
-        current: Annotated[Principal, Depends(principal)],
-        session: Annotated[Session, Depends(get_session)],
+        current: Principal = Depends(principal),
+        session: Session = Depends(get_session),
     ) -> dict[str, str]:
         try:
             return resolve_inbound(session, current, request.did_e164)
@@ -109,7 +108,7 @@ def create_app(
     @app.post("/v1/vanity/classify")
     def vanity(
         request: VanityRequest,
-        current: Annotated[Principal, Depends(principal)],
+        current: Principal = Depends(principal),
     ) -> dict:
         if current.role != "tenant":
             raise HTTPException(status_code=403, detail="Tenant credentials required")
