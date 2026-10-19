@@ -20,11 +20,11 @@ This roadmap is the single canonical, top-level project tracker. Update it in th
 | ID | Milestone | State | Acceptance evidence |
 | --- | --- | --- | --- |
 | 00 | Source inventory, scope, safety constraints | IMPLEMENTED | README and requirements traceability |
-| 01 | Repository structure, package, CI workflow | IMPLEMENTED | Files committed; CI job proof required |
-| 02 | Deterministic vanity classification / validation | IMPLEMENTED | Unit test suite; CI success required to mark TESTED |
-| 03 | Tenant and carrier authentication | IMPLEMENTED | No unauthenticated routing; tests present |
-| 04 | Tenant-isolated authorized CLI routing | IMPLEMENTED | Ownership + provider approval + DNO freshness tests present |
-| 05 | Inbound DID resolution control plane | IMPLEMENTED | Carrier role and verified DID required |
+| 01 | Repository structure, package, CI workflow | TESTED | GitHub Actions #13, both interpreters passed |
+| 02 | Deterministic vanity classification / validation | TESTED | 25 tests passed on 3.11 and 3.13 |
+| 03 | Tenant and carrier authentication | TESTED | Authentication tests passed in CI |
+| 04 | Tenant-isolated authorized CLI routing | TESTED | Security regression tests passed in CI |
+| 05 | Inbound DID resolution control plane | TESTED | Provider-scoped routing tests passed in CI |
 | 06 | PostgreSQL schema and versioned migrations | IMPLEMENTED | SQL migration; real Postgres integration required |
 | 07 | Rust/Tokio Global Alias Engine, API contracts | PENDING | Rust unit/integration tests and benchmarks |
 | 08 | Number inventory lifecycle and provider reconciliation | PENDING | Idempotent lease/assign/release and recovery |
@@ -56,3 +56,14 @@ This roadmap is the single canonical, top-level project tracker. Update it in th
 ## Tracking rule
 
 Never conflate a generated number pattern, an authorized route decision and an actual connected call. Each is an independent observable milestone.
+
+## Verified CI evidence
+
+- **Commit:** `41cdd1da26873561a2ab5f4ea4751f0675f68a9d`
+- **GitHub Actions run:** [#13 / 39212431543](https://github.com/mojealterego/All-Virtual-Phone-Voip/actions/runs/39212431543)
+- **Python 3.11:** 25 passed, 0 failed
+- **Python 3.13:** 25 passed, 0 failed
+- **Scope:** unit tests and HTTP API tests against in-memory SQLite; Python compilation and dependency installation in hosted runners.
+- **Not validated:** PostgreSQL migration applied against live PostgreSQL, carrier/SIP/SMPP/JMAP/Android integrations, cross-host disaster recovery, production deployment.
+
+This evidence applies to the referenced code commit; later code changes require new CI evidence.
